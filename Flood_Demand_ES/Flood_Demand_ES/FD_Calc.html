@@ -96,18 +96,40 @@
                     <h1 class="modulename">
 Flood_Demand_ES<wbr>.FD_Calc    </h1>
 
-                        <div class="docstring"><p>Created on Wed Jan 26 10:32:01 2022</p>
+                        <div class="docstring"><p>A module/routine to identify locations in a landscape with the highest value for reducing flood damages. </p>
 
-<p>@author: benja</p>
+<p>Creates a raster of a "Flood Control Demand Score" (unit-less) which represents 
+the contribution that each pixel makes to protecting downstream structures from flooding.</p>
+
+<p>Adapted from:
+Watson, K. B., Galford, G. L., Sonter, L. J., Koh, I., &amp; Ricketts, T. H. (2019). 
+Effects of human demand on conservation planning for biodiversity and ecosystem services. 
+Conservation Biology, 33(4), 942–952.  </p>
+
+<p>Available at: github.com/bubalis/flood_control_demand</p>
 </div>
 
                         <details>
             <summary>View Source</summary>
             <div class="pdoc-code codehilite"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Created on Wed Jan 26 10:32:01 2022</span>
+<span class="sd">A module/routine to identify locations in a landscape with the highest value for reducing flood damages. </span>
 
-<span class="sd">@author: benja</span>
+
+
+<span class="sd">Creates a raster of a &quot;Flood Control Demand Score&quot; (unit-less) which represents </span>
+<span class="sd">the contribution that each pixel makes to protecting downstream structures from flooding.</span>
+
+
+
+<span class="sd">Adapted from:</span>
+<span class="sd">Watson, K. B., Galford, G. L., Sonter, L. J., Koh, I., &amp; Ricketts, T. H. (2019). </span>
+<span class="sd">Effects of human demand on conservation planning for biodiversity and ecosystem services. </span>
+<span class="sd">Conservation Biology, 33(4), 942–952.  </span>
+
+
+
+<span class="sd">Available at: github.com/bubalis/flood_control_demand</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 
@@ -137,7 +159,7 @@ Flood_Demand_ES<wbr>.FD_Calc    </h1>
 
 <span class="k">class</span> <span class="nc">floodDemandCalculator</span><span class="p">():</span>
     
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wkdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wkdir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Initialize the Flood Demand Calculator, working in wkdir</span>
 
@@ -150,7 +172,8 @@ Flood_Demand_ES<wbr>.FD_Calc    </h1>
 <span class="sd">        None.</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
-        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">wkdir</span><span class="p">:</span>
+            <span class="n">wkdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wkdir</span> <span class="o">=</span> <span class="n">wkdir</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">intermed_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wkdir</span><span class="p">,</span> <span class="s1">&#39;intermediate_data&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unnested_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wkdir</span><span class="p">,</span> <span class="s1">&#39;watershed_rasters&#39;</span><span class="p">)</span>
@@ -1058,7 +1081,7 @@ Flood_Demand_ES<wbr>.FD_Calc    </h1>
             <summary>View Source</summary>
             <div class="pdoc-code codehilite"><pre><span></span><span class="k">class</span> <span class="nc">floodDemandCalculator</span><span class="p">():</span>
     
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wkdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wkdir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Initialize the Flood Demand Calculator, working in wkdir</span>
 
@@ -1071,7 +1094,8 @@ Flood_Demand_ES<wbr>.FD_Calc    </h1>
 <span class="sd">        None.</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
-        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">wkdir</span><span class="p">:</span>
+            <span class="n">wkdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wkdir</span> <span class="o">=</span> <span class="n">wkdir</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">intermed_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wkdir</span><span class="p">,</span> <span class="s1">&#39;intermediate_data&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unnested_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wkdir</span><span class="p">,</span> <span class="s1">&#39;watershed_rasters&#39;</span><span class="p">)</span>
@@ -1675,12 +1699,12 @@ Flood_Demand_ES<wbr>.FD_Calc    </h1>
                                         <div class="attr function"><a class="headerlink" href="#floodDemandCalculator.__init__">#&nbsp;&nbsp</a>
 
         
-            <span class="name">floodDemandCalculator</span><span class="signature">(wkdir=&#39;/mnt/c/Users/benja/Flood_Demand_ES&#39;)</span>
+            <span class="name">floodDemandCalculator</span><span class="signature">(wkdir=None)</span>
     </div>
 
             <details>
             <summary>View Source</summary>
-            <div class="pdoc-code codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wkdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()):</span>
+            <div class="pdoc-code codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wkdir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Initialize the Flood Demand Calculator, working in wkdir</span>
 
@@ -1693,7 +1717,8 @@ Flood_Demand_ES<wbr>.FD_Calc    </h1>
 <span class="sd">        None.</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
-        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">wkdir</span><span class="p">:</span>
+            <span class="n">wkdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wkdir</span> <span class="o">=</span> <span class="n">wkdir</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">intermed_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wkdir</span><span class="p">,</span> <span class="s1">&#39;intermediate_data&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unnested_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wkdir</span><span class="p">,</span> <span class="s1">&#39;watershed_rasters&#39;</span><span class="p">)</span>

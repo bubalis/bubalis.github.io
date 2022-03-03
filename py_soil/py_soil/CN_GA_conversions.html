@@ -36,9 +36,6 @@
                     <a class="function" href="#GA_t_scale">GA_t_scale</a>
             </li>
             <li>
-                    <a class="function" href="#CN_est1">CN_est1</a>
-            </li>
-            <li>
                     <a class="function" href="#CN_est">CN_est</a>
             </li>
             <li>
@@ -75,8 +72,10 @@ py_soil<wbr>.CN_GA_conversions    </h1>
                         <div class="docstring"><p>Functions for converting results from Curve-Number simulations to Green-Ampt parameters
 and vice-versa.</p>
 
-<p>Equations from:
-https://ascelibrary-org.ezproxy.uvm.edu/doi/pdf/10.1061/%28ASCE%29HE.1943-5584.0001838</p>
+<p>Taken From:
+Baiamonte, G. (2019). SCS curve number and green-Ampt infiltration models. 
+Journal of Hydrologic Engineering, 24(10), 04019034.
+https://ascelibrary.org/doi/pdf/10.1061/%28ASCE%29HE.1943-5584.0001838?casa_token=W7b6GRxE6j0AAAAA:t5kZ935hvintrt5mUAcvaFVIwcAuTG085rj6fFi2peXxQJUpWJjPIwS1BAkfN1uMoB5sxjmfRw</p>
 </div>
 
                         <details>
@@ -87,21 +86,49 @@ https://ascelibrary-org.ezproxy.uvm.edu/doi/pdf/10.1061/%28ASCE%29HE.1943-5584.0
 <span class="sd">Functions for converting results from Curve-Number simulations to Green-Ampt parameters</span>
 <span class="sd">and vice-versa.</span>
 
-<span class="sd">Equations from:</span>
-<span class="sd">https://ascelibrary-org.ezproxy.uvm.edu/doi/pdf/10.1061/%28ASCE%29HE.1943-5584.0001838</span>
+
+
+<span class="sd">Taken From:</span>
+<span class="sd">Baiamonte, G. (2019). SCS curve number and green-Ampt infiltration models. </span>
+<span class="sd">Journal of Hydrologic Engineering, 24(10), 04019034.</span>
+<span class="sd">https://ascelibrary.org/doi/pdf/10.1061/%28ASCE%29HE.1943-5584.0001838?casa_token=W7b6GRxE6j0AAAAA:t5kZ935hvintrt5mUAcvaFVIwcAuTG085rj6fFi2peXxQJUpWJjPIwS1BAkfN1uMoB5sxjmfRw</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
 
-<span class="k">def</span> <span class="nf">GA_t_scale</span><span class="p">(</span><span class="n">delt_vmc</span><span class="p">,</span> <span class="n">matric_pot</span><span class="p">,</span> <span class="n">Ksat</span><span class="p">,</span> <span class="p">):</span>
+<span class="k">def</span> <span class="nf">GA_t_scale</span><span class="p">(</span><span class="n">delt_vmc</span><span class="p">,</span> <span class="n">matric_pot</span><span class="p">,</span> <span class="n">Ksat</span> <span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Calculate the sorbitivity timescale for the soil. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">  delt_vmc :</span>
+<span class="sd">      Change in volumetric moisture content across the wetting front (mm/mm)</span>
+
+<span class="sd">      </span>
+<span class="sd">  matric_pot :  matric potential of a soil in pascals</span>
+<span class="sd">  </span>
+<span class="sd">  Ksat : saturated hydraulic conductivity (mm/hr)</span>
+<span class="sd"> </span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tc_ga : Characteristic timescale of the infiltration process.</span>
+<span class="sd">   </span>
+<span class="sd">    </span>
+<span class="sd">    Equation 12B</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    
     <span class="k">return</span> <span class="n">delt_vmc</span> <span class="o">*</span> <span class="n">matric_pot</span> <span class="o">/</span><span class="n">Ksat</span>
 
-<span class="k">def</span> <span class="nf">CN_est1</span><span class="p">(</span><span class="n">total_rfall</span><span class="p">,</span> <span class="n">ro_coef_GA</span><span class="p">,</span> <span class="n">lamb</span> <span class="o">=</span> <span class="mf">.2</span><span class="p">):</span>
-    <span class="n">num</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">total_rfall</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">ro_coef_GA</span><span class="p">)</span>
-    <span class="n">denom</span> <span class="o">=</span> <span class="n">ro_coef_GA</span> <span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">lamb</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">lamb</span> <span class="o">+</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">ro_coef_GA</span><span class="p">)</span> <span class="o">+</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">ro_coef_GA</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">lamb</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">lamb</span><span class="p">)</span>
-    <span class="k">return</span> <span class="mi">25400</span> <span class="o">/</span> <span class="p">(</span><span class="mi">254</span> <span class="o">+</span> <span class="p">(</span><span class="n">num</span><span class="o">/</span><span class="n">denom</span><span class="p">))</span>
+<span class="c1">#def CN_est1(total_rfall, ro_coef_GA, lamb = .2):</span>
+<span class="c1">#    num = 2 * total_rfall * (1-ro_coef_GA)</span>
+<span class="c1">#    denom = ro_coef_GA *(1-lamb) + 2 * lamb + sqrt(ro_coef_GA) + sqrt(ro_coef_GA * (1-lamb)**2 + 4 * lamb)</span>
+<span class="c1">#    return 25400 / (254 + (num/denom))</span>
 
 <span class="k">def</span> <span class="nf">CN_est</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">Ksat</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">norm_duration</span><span class="p">,</span> <span class="n">ro_coef_GA</span><span class="p">,</span> <span class="n">lamb</span> <span class="o">=</span> <span class="mf">.2</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
@@ -112,20 +139,22 @@ https://ascelibrary-org.ezproxy.uvm.edu/doi/pdf/10.1061/%28ASCE%29HE.1943-5584.0
 <span class="sd">    t : time (hrs)</span>
 <span class="sd">    Ksat : saturated hydraulic conductivity (mm/hr)</span>
 <span class="sd">        </span>
-<span class="sd">    rho : TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
-<span class="sd">    norm_duration : TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
-<span class="sd">    runoff_coef : TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
-<span class="sd">    lamb : TYPE, optional</span>
-<span class="sd">        DESCRIPTION. The default is .2.</span>
+<span class="sd">    rho: rainfall intensity noramlized to the </span>
+<span class="sd">    Saturated Hydraulic Conductivity of the soil (unitless)</span>
+<span class="sd">        </span>
+<span class="sd">    norm_duration :  normalized duration of rainfall (in hours)</span>
+<span class="sd">    calculated with function calc_norm_duration</span>
+<span class="sd">        </span>
+<span class="sd">    runoff_coef : fraction of rainfall lost as runoff. (between 0 and 1)</span>
+<span class="sd">    </span>
+<span class="sd">    lamb : ratio of initial abstractions to the S parameter of the SCS CN equation.</span>
+<span class="sd">     The default is .2.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    Estimated Curve Number</span>
 <span class="sd">        </span>
-<span class="sd">        Equation #22</span>
+<span class="sd">        Equation #22b</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
     
@@ -138,20 +167,109 @@ https://ascelibrary-org.ezproxy.uvm.edu/doi/pdf/10.1061/%28ASCE%29HE.1943-5584.0
 
 
 <span class="k">def</span> <span class="nf">calc_rho</span><span class="p">(</span><span class="n">Ksat</span><span class="p">,</span> <span class="n">r_intens</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Return the rainfall intensity noramlized to the </span>
+<span class="sd">    Saturated Hydraulic Conductivity of the soil</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Ksat : saturated hydraulic conductivity (mm/hr)</span>
+<span class="sd">        </span>
+
+<span class="sd">        </span>
+<span class="sd">    r_intens : rainfall intensity (mm/hr)</span>
+<span class="sd">        </span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    rho: rainfall intensity noramlized to the </span>
+<span class="sd">    Saturated Hydraulic Conductivity of the soil (unitless)</span>
+<span class="sd">    </span>
+<span class="sd">    Immediately after equation #13.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
     <span class="k">return</span> <span class="n">r_intens</span><span class="o">/</span><span class="n">Ksat</span>
 
 <span class="k">def</span> <span class="nf">calc_norm_duration</span><span class="p">(</span><span class="n">ro_coef_GA</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">lamb</span> <span class="o">=</span> <span class="mf">.2</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Calculate the normalized duration of rainfall in hours.      </span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ro_coef_GA : runoff as a fraction of rainfall in the storm, </span>
+<span class="sd">                as simulated using the green-ampt-model</span>
+<span class="sd">                </span>
+<span class="sd">      rho: rainfall intensity noramlized to the </span>
+<span class="sd">      Saturated Hydraulic Conductivity of the soil (unitless). </span>
+<span class="sd">      Can be calculated with the function calc_rho.</span>
+<span class="sd">      </span>
+<span class="sd">    lamb : ratio of initial abstractions to the S parameter of the SCS CN equation.</span>
+<span class="sd">     The default is .2.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    normalized duration of rainfall (in hours)</span>
+<span class="sd">    </span>
+<span class="sd">    Equation #16</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    
     <span class="n">num</span> <span class="o">=</span> <span class="n">ro_coef_GA</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span> <span class="n">lamb</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">lamb</span> <span class="o">+</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">ro_coef_GA</span><span class="p">)</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">ro_coef_GA</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">lamb</span><span class="p">)</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="n">lamb</span><span class="p">)</span>
     <span class="n">denom</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">rho</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">ro_coef_GA</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">num</span><span class="o">/</span><span class="n">denom</span>
 
-<span class="k">def</span> <span class="nf">KsMax</span><span class="p">(</span><span class="n">GA_t_scale</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">KsMax</span><span class="p">(</span><span class="n">GA_t_scale</span><span class="p">,</span> <span class="n">r_intense</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Calculate maximum Ksat value compatible with any runoff from the soil.</span>
+<span class="sd">    </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    GA_t_scale :  Characteristic timescale of the infiltration process for the soil.</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">     r_intense : intensity of rainfall (mm/hr)</span>
+<span class="sd">        DESCRIPTION.</span>
+<span class="sd">        </span>
+<span class="sd">    t : time of rainfall (hrs)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Theoretical maximum value of Ksat for the soil.</span>
+<span class="sd">        </span>
+<span class="sd">        Equation 23b</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
     
-    <span class="k">return</span> <span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="o">+</span> <span class="mi">4</span><span class="o">*</span> <span class="n">GA_t_scale</span><span class="p">)</span><span class="o">-</span><span class="n">t</span> <span class="p">))</span> <span class="o">/</span> <span class="mi">2</span><span class="o">*</span><span class="n">GA_t_scale</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">r_intense</span> <span class="o">*</span> <span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="o">+</span> <span class="mi">4</span><span class="o">*</span> <span class="n">GA_t_scale</span><span class="p">)</span><span class="o">-</span><span class="n">t</span> <span class="p">))</span> <span class="o">/</span> <span class="mi">2</span><span class="o">*</span><span class="n">GA_t_scale</span>
     
 <span class="c1">#%%</span>
 <span class="k">def</span> <span class="nf">CN_min</span><span class="p">(</span><span class="n">Ksat_max</span><span class="p">,</span> <span class="n">hrs</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">lamb</span> <span class="o">=</span><span class="mf">.2</span><span class="p">):</span>
-    
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Calculate the minimum estimated Curve Number for the soil based on the </span>
+<span class="sd">    rainfall simulation. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Ksat_max : Max value for saturated Hydraulic Conductivity (mm/mm)</span>
+<span class="sd">    calculated using Ks_max</span>
+<span class="sd">    </span>
+<span class="sd">   </span>
+<span class="sd">    </span>
+<span class="sd">   rho: rainfall intensity noramlized to the </span>
+<span class="sd">   Saturated Hydraulic Conductivity of the soil (unitless). </span>
+<span class="sd">   Can be calculated with the function calc_rho.</span>
+<span class="sd">   </span>
+<span class="sd"> lamb : ratio of initial abstractions to the S parameter of the SCS CN equation.</span>
+<span class="sd">  The default is .2.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Estimate of the minimum value of the CN for the soil.</span>
+
+<span class="sd">    Equation #24</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     
     <span class="k">return</span> <span class="mi">25400</span> <span class="o">/</span> \
         <span class="p">(</span><span class="mi">254</span> <span class="o">+</span> <span class="p">(</span><span class="n">hrs</span> <span class="o">*</span><span class="n">Ksat_max</span> <span class="o">*</span> <span class="n">rho</span><span class="p">)</span><span class="o">/</span> <span class="p">(</span><span class="n">lamb</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">lamb</span><span class="p">)</span><span class="o">-</span> <span class="n">lamb</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
@@ -159,29 +277,28 @@ https://ascelibrary-org.ezproxy.uvm.edu/doi/pdf/10.1061/%28ASCE%29HE.1943-5584.0
         
 <span class="k">def</span> <span class="nf">estimate_CN</span><span class="p">(</span><span class="n">delt_vmc</span><span class="p">,</span> <span class="n">Ksat</span><span class="p">,</span> <span class="n">matric_pot</span><span class="p">,</span> <span class="n">hrs</span><span class="p">,</span> <span class="n">r_intens</span><span class="p">,</span> <span class="n">ro_coef_GA</span><span class="p">,</span> <span class="n">lamb</span> <span class="o">=</span> <span class="mf">.2</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    </span>
+<span class="sd">    Run all steps for estimating the effective curve-number of a soil </span>
+<span class="sd">    based on Green-Ampt Simlations and parameters.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    delt_vmc : TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
-<span class="sd">    Ksat : TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
-<span class="sd">    matric_pot : TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
-<span class="sd">    hrs : TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
-<span class="sd">    r_intens : TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
-<span class="sd">    ro_coef_GA : TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
+<span class="sd">    delt_vmc :</span>
+<span class="sd">        Change in volumetric moisture content across the wetting front (mm/mm)</span>
+<span class="sd">    Ksat : saturated hydraulic conductivity (mm/hr)</span>
+<span class="sd">        </span>
+<span class="sd">    matric_pot :  matric potential of a soil in pascals</span>
+<span class="sd">    hrs : time of storm event (in hrs)</span>
+<span class="sd">        </span>
+<span class="sd">    r_intens : rainfall intensity (mm/hr)</span>
+<span class="sd">        </span>
+<span class="sd">    ro_coef_GA : runoff as a fraction of rainfall in the storm, </span>
+<span class="sd">                as simulated using the green-ampt-model</span>
 <span class="sd">    lamb : TYPE, optional</span>
 <span class="sd">        DESCRIPTION. The default is .2.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
+<span class="sd">    An estimated equivalent Curve Number</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
     
@@ -207,34 +324,57 @@ https://ascelibrary-org.ezproxy.uvm.edu/doi/pdf/10.1061/%28ASCE%29HE.1943-5584.0
 
             <details>
             <summary>View Source</summary>
-            <div class="pdoc-code codehilite"><pre><span></span><span class="k">def</span> <span class="nf">GA_t_scale</span><span class="p">(</span><span class="n">delt_vmc</span><span class="p">,</span> <span class="n">matric_pot</span><span class="p">,</span> <span class="n">Ksat</span><span class="p">,</span> <span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span class="k">def</span> <span class="nf">GA_t_scale</span><span class="p">(</span><span class="n">delt_vmc</span><span class="p">,</span> <span class="n">matric_pot</span><span class="p">,</span> <span class="n">Ksat</span> <span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Calculate the sorbitivity timescale for the soil. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">  delt_vmc :</span>
+<span class="sd">      Change in volumetric moisture content across the wetting front (mm/mm)</span>
+
+<span class="sd">      </span>
+<span class="sd">  matric_pot :  matric potential of a soil in pascals</span>
+<span class="sd">  </span>
+<span class="sd">  Ksat : saturated hydraulic conductivity (mm/hr)</span>
+<span class="sd"> </span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tc_ga : Characteristic timescale of the infiltration process.</span>
+<span class="sd">   </span>
+<span class="sd">    </span>
+<span class="sd">    Equation 12B</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    
     <span class="k">return</span> <span class="n">delt_vmc</span> <span class="o">*</span> <span class="n">matric_pot</span> <span class="o">/</span><span class="n">Ksat</span>
 </pre></div>
 
         </details>
 
-    
+            <div class="docstring"><p>Calculate the sorbitivity timescale for the soil. </p>
 
-                </section>
-                <section id="CN_est1">
-                            <div class="attr function"><a class="headerlink" href="#CN_est1">#&nbsp;&nbsp</a>
+<p>Parameters</p>
 
-        
-            <span class="def">def</span>
-            <span class="name">CN_est1</span><span class="signature">(total_rfall, ro_coef_GA, lamb=0.2)</span>:
-    </div>
+<hr />
 
-            <details>
-            <summary>View Source</summary>
-            <div class="pdoc-code codehilite"><pre><span></span><span class="k">def</span> <span class="nf">CN_est1</span><span class="p">(</span><span class="n">total_rfall</span><span class="p">,</span> <span class="n">ro_coef_GA</span><span class="p">,</span> <span class="n">lamb</span> <span class="o">=</span> <span class="mf">.2</span><span class="p">):</span>
-    <span class="n">num</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">total_rfall</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">ro_coef_GA</span><span class="p">)</span>
-    <span class="n">denom</span> <span class="o">=</span> <span class="n">ro_coef_GA</span> <span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">lamb</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">lamb</span> <span class="o">+</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">ro_coef_GA</span><span class="p">)</span> <span class="o">+</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">ro_coef_GA</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">lamb</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">lamb</span><span class="p">)</span>
-    <span class="k">return</span> <span class="mi">25400</span> <span class="o">/</span> <span class="p">(</span><span class="mi">254</span> <span class="o">+</span> <span class="p">(</span><span class="n">num</span><span class="o">/</span><span class="n">denom</span><span class="p">))</span>
-</pre></div>
+<p>delt_vmc :
+    Change in volumetric moisture content across the wetting front (mm/mm)</p>
 
-        </details>
+<p>matric_pot :  matric potential of a soil in pascals</p>
 
-    
+<p>Ksat : saturated hydraulic conductivity (mm/hr)</p>
+
+<p>Returns</p>
+
+<hr />
+
+<p>tc_ga : Characteristic timescale of the infiltration process.</p>
+
+<p>Equation 12B</p>
+</div>
+
 
                 </section>
                 <section id="CN_est">
@@ -256,20 +396,22 @@ https://ascelibrary-org.ezproxy.uvm.edu/doi/pdf/10.1061/%28ASCE%29HE.1943-5584.0
 <span class="sd">    t : time (hrs)</span>
 <span class="sd">    Ksat : saturated hydraulic conductivity (mm/hr)</span>
 <span class="sd">        </span>
-<span class="sd">    rho : TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
-<span class="sd">    norm_duration : TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
-<span class="sd">    runoff_coef : TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
-<span class="sd">    lamb : TYPE, optional</span>
-<span class="sd">        DESCRIPTION. The default is .2.</span>
+<span class="sd">    rho: rainfall intensity noramlized to the </span>
+<span class="sd">    Saturated Hydraulic Conductivity of the soil (unitless)</span>
+<span class="sd">        </span>
+<span class="sd">    norm_duration :  normalized duration of rainfall (in hours)</span>
+<span class="sd">    calculated with function calc_norm_duration</span>
+<span class="sd">        </span>
+<span class="sd">    runoff_coef : fraction of rainfall lost as runoff. (between 0 and 1)</span>
+<span class="sd">    </span>
+<span class="sd">    lamb : ratio of initial abstractions to the S parameter of the SCS CN equation.</span>
+<span class="sd">     The default is .2.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    Estimated Curve Number</span>
 <span class="sd">        </span>
-<span class="sd">        Equation #22</span>
+<span class="sd">        Equation #22b</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
     
@@ -288,20 +430,22 @@ https://ascelibrary-org.ezproxy.uvm.edu/doi/pdf/10.1061/%28ASCE%29HE.1943-5584.0
 <p>t : time (hrs)
 Ksat : saturated hydraulic conductivity (mm/hr)</p>
 
-<p>rho : TYPE
-    DESCRIPTION.
-norm_duration : TYPE
-    DESCRIPTION.
-runoff_coef : TYPE
-    DESCRIPTION.
-lamb : TYPE, optional
-    DESCRIPTION. The default is .2.</p>
+<p>rho: rainfall intensity noramlized to the 
+Saturated Hydraulic Conductivity of the soil (unitless)</p>
+
+<p>norm_duration :  normalized duration of rainfall (in hours)
+calculated with function calc_norm_duration</p>
+
+<p>runoff_coef : fraction of rainfall lost as runoff. (between 0 and 1)</p>
+
+<p>lamb : ratio of initial abstractions to the S parameter of the SCS CN equation.
+ The default is .2.</p>
 
 <h2 id="returns">Returns</h2>
 
 <p>Estimated Curve Number</p>
 
-<pre><code>Equation #22
+<pre><code>Equation #22b
 </code></pre>
 </div>
 
@@ -318,12 +462,49 @@ lamb : TYPE, optional
             <details>
             <summary>View Source</summary>
             <div class="pdoc-code codehilite"><pre><span></span><span class="k">def</span> <span class="nf">calc_rho</span><span class="p">(</span><span class="n">Ksat</span><span class="p">,</span> <span class="n">r_intens</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Return the rainfall intensity noramlized to the </span>
+<span class="sd">    Saturated Hydraulic Conductivity of the soil</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Ksat : saturated hydraulic conductivity (mm/hr)</span>
+<span class="sd">        </span>
+
+<span class="sd">        </span>
+<span class="sd">    r_intens : rainfall intensity (mm/hr)</span>
+<span class="sd">        </span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    rho: rainfall intensity noramlized to the </span>
+<span class="sd">    Saturated Hydraulic Conductivity of the soil (unitless)</span>
+<span class="sd">    </span>
+<span class="sd">    Immediately after equation #13.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
     <span class="k">return</span> <span class="n">r_intens</span><span class="o">/</span><span class="n">Ksat</span>
 </pre></div>
 
         </details>
 
-    
+            <div class="docstring"><p>Return the rainfall intensity noramlized to the 
+Saturated Hydraulic Conductivity of the soil</p>
+
+<h2 id="parameters">Parameters</h2>
+
+<p>Ksat : saturated hydraulic conductivity (mm/hr)</p>
+
+<p>r_intens : rainfall intensity (mm/hr)</p>
+
+<h2 id="returns">Returns</h2>
+
+<p>rho: rainfall intensity noramlized to the 
+Saturated Hydraulic Conductivity of the soil (unitless)</p>
+
+<p>Immediately after equation #13.</p>
+</div>
+
 
                 </section>
                 <section id="calc_norm_duration">
@@ -337,6 +518,30 @@ lamb : TYPE, optional
             <details>
             <summary>View Source</summary>
             <div class="pdoc-code codehilite"><pre><span></span><span class="k">def</span> <span class="nf">calc_norm_duration</span><span class="p">(</span><span class="n">ro_coef_GA</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">lamb</span> <span class="o">=</span> <span class="mf">.2</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Calculate the normalized duration of rainfall in hours.      </span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ro_coef_GA : runoff as a fraction of rainfall in the storm, </span>
+<span class="sd">                as simulated using the green-ampt-model</span>
+<span class="sd">                </span>
+<span class="sd">      rho: rainfall intensity noramlized to the </span>
+<span class="sd">      Saturated Hydraulic Conductivity of the soil (unitless). </span>
+<span class="sd">      Can be calculated with the function calc_rho.</span>
+<span class="sd">      </span>
+<span class="sd">    lamb : ratio of initial abstractions to the S parameter of the SCS CN equation.</span>
+<span class="sd">     The default is .2.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    normalized duration of rainfall (in hours)</span>
+<span class="sd">    </span>
+<span class="sd">    Equation #16</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    
     <span class="n">num</span> <span class="o">=</span> <span class="n">ro_coef_GA</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span> <span class="n">lamb</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">lamb</span> <span class="o">+</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">ro_coef_GA</span><span class="p">)</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">ro_coef_GA</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">lamb</span><span class="p">)</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="n">lamb</span><span class="p">)</span>
     <span class="n">denom</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">rho</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">ro_coef_GA</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">num</span><span class="o">/</span><span class="n">denom</span>
@@ -344,7 +549,27 @@ lamb : TYPE, optional
 
         </details>
 
-    
+            <div class="docstring"><p>Calculate the normalized duration of rainfall in hours.      </p>
+
+<h2 id="parameters">Parameters</h2>
+
+<p>ro_coef_GA : runoff as a fraction of rainfall in the storm, 
+            as simulated using the green-ampt-model</p>
+
+<p>rho: rainfall intensity noramlized to the 
+  Saturated Hydraulic Conductivity of the soil (unitless). 
+  Can be calculated with the function calc_rho.</p>
+
+<p>lamb : ratio of initial abstractions to the S parameter of the SCS CN equation.
+ The default is .2.</p>
+
+<h2 id="returns">Returns</h2>
+
+<p>normalized duration of rainfall (in hours)</p>
+
+<p>Equation #16</p>
+</div>
+
 
                 </section>
                 <section id="KsMax">
@@ -352,19 +577,58 @@ lamb : TYPE, optional
 
         
             <span class="def">def</span>
-            <span class="name">KsMax</span><span class="signature">(GA_t_scale, i, t)</span>:
+            <span class="name">KsMax</span><span class="signature">(GA_t_scale, r_intense, t)</span>:
     </div>
 
             <details>
             <summary>View Source</summary>
-            <div class="pdoc-code codehilite"><pre><span></span><span class="k">def</span> <span class="nf">KsMax</span><span class="p">(</span><span class="n">GA_t_scale</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span class="k">def</span> <span class="nf">KsMax</span><span class="p">(</span><span class="n">GA_t_scale</span><span class="p">,</span> <span class="n">r_intense</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Calculate maximum Ksat value compatible with any runoff from the soil.</span>
+<span class="sd">    </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    GA_t_scale :  Characteristic timescale of the infiltration process for the soil.</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">     r_intense : intensity of rainfall (mm/hr)</span>
+<span class="sd">        DESCRIPTION.</span>
+<span class="sd">        </span>
+<span class="sd">    t : time of rainfall (hrs)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Theoretical maximum value of Ksat for the soil.</span>
+<span class="sd">        </span>
+<span class="sd">        Equation 23b</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
     
-    <span class="k">return</span> <span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="o">+</span> <span class="mi">4</span><span class="o">*</span> <span class="n">GA_t_scale</span><span class="p">)</span><span class="o">-</span><span class="n">t</span> <span class="p">))</span> <span class="o">/</span> <span class="mi">2</span><span class="o">*</span><span class="n">GA_t_scale</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">r_intense</span> <span class="o">*</span> <span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">t</span><span class="o">+</span> <span class="mi">4</span><span class="o">*</span> <span class="n">GA_t_scale</span><span class="p">)</span><span class="o">-</span><span class="n">t</span> <span class="p">))</span> <span class="o">/</span> <span class="mi">2</span><span class="o">*</span><span class="n">GA_t_scale</span>
 </pre></div>
 
         </details>
 
-    
+            <div class="docstring"><p>Calculate maximum Ksat value compatible with any runoff from the soil.</p>
+
+<h2 id="parameters">Parameters</h2>
+
+<p>GA_t_scale :  Characteristic timescale of the infiltration process for the soil.</p>
+
+<p>r_intense : intensity of rainfall (mm/hr)
+    DESCRIPTION.</p>
+
+<p>t : time of rainfall (hrs)</p>
+
+<h2 id="returns">Returns</h2>
+
+<p>Theoretical maximum value of Ksat for the soil.</p>
+
+<pre><code>Equation 23b
+</code></pre>
+</div>
+
 
                 </section>
                 <section id="CN_min">
@@ -378,7 +642,30 @@ lamb : TYPE, optional
             <details>
             <summary>View Source</summary>
             <div class="pdoc-code codehilite"><pre><span></span><span class="k">def</span> <span class="nf">CN_min</span><span class="p">(</span><span class="n">Ksat_max</span><span class="p">,</span> <span class="n">hrs</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">lamb</span> <span class="o">=</span><span class="mf">.2</span><span class="p">):</span>
-    
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Calculate the minimum estimated Curve Number for the soil based on the </span>
+<span class="sd">    rainfall simulation. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Ksat_max : Max value for saturated Hydraulic Conductivity (mm/mm)</span>
+<span class="sd">    calculated using Ks_max</span>
+<span class="sd">    </span>
+<span class="sd">   </span>
+<span class="sd">    </span>
+<span class="sd">   rho: rainfall intensity noramlized to the </span>
+<span class="sd">   Saturated Hydraulic Conductivity of the soil (unitless). </span>
+<span class="sd">   Can be calculated with the function calc_rho.</span>
+<span class="sd">   </span>
+<span class="sd"> lamb : ratio of initial abstractions to the S parameter of the SCS CN equation.</span>
+<span class="sd">  The default is .2.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Estimate of the minimum value of the CN for the soil.</span>
+
+<span class="sd">    Equation #24</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     
     <span class="k">return</span> <span class="mi">25400</span> <span class="o">/</span> \
         <span class="p">(</span><span class="mi">254</span> <span class="o">+</span> <span class="p">(</span><span class="n">hrs</span> <span class="o">*</span><span class="n">Ksat_max</span> <span class="o">*</span> <span class="n">rho</span><span class="p">)</span><span class="o">/</span> <span class="p">(</span><span class="n">lamb</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">lamb</span><span class="p">)</span><span class="o">-</span> <span class="n">lamb</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
@@ -386,7 +673,32 @@ lamb : TYPE, optional
 
         </details>
 
-    
+            <div class="docstring"><p>Calculate the minimum estimated Curve Number for the soil based on the 
+   rainfall simulation. </p>
+
+<p>Parameters</p>
+
+<hr />
+
+<p>Ksat_max : Max value for saturated Hydraulic Conductivity (mm/mm)
+   calculated using Ks_max</p>
+
+<p>rho: rainfall intensity noramlized to the 
+  Saturated Hydraulic Conductivity of the soil (unitless). 
+  Can be calculated with the function calc_rho.</p>
+
+<p>lamb : ratio of initial abstractions to the S parameter of the SCS CN equation.
+ The default is .2.</p>
+
+<p>Returns</p>
+
+<hr />
+
+<p>Estimate of the minimum value of the CN for the soil.</p>
+
+<p>Equation #24</p>
+</div>
+
 
                 </section>
                 <section id="estimate_CN">
@@ -401,29 +713,28 @@ lamb : TYPE, optional
             <summary>View Source</summary>
             <div class="pdoc-code codehilite"><pre><span></span><span class="k">def</span> <span class="nf">estimate_CN</span><span class="p">(</span><span class="n">delt_vmc</span><span class="p">,</span> <span class="n">Ksat</span><span class="p">,</span> <span class="n">matric_pot</span><span class="p">,</span> <span class="n">hrs</span><span class="p">,</span> <span class="n">r_intens</span><span class="p">,</span> <span class="n">ro_coef_GA</span><span class="p">,</span> <span class="n">lamb</span> <span class="o">=</span> <span class="mf">.2</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    </span>
+<span class="sd">    Run all steps for estimating the effective curve-number of a soil </span>
+<span class="sd">    based on Green-Ampt Simlations and parameters.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    delt_vmc : TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
-<span class="sd">    Ksat : TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
-<span class="sd">    matric_pot : TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
-<span class="sd">    hrs : TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
-<span class="sd">    r_intens : TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
-<span class="sd">    ro_coef_GA : TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
+<span class="sd">    delt_vmc :</span>
+<span class="sd">        Change in volumetric moisture content across the wetting front (mm/mm)</span>
+<span class="sd">    Ksat : saturated hydraulic conductivity (mm/hr)</span>
+<span class="sd">        </span>
+<span class="sd">    matric_pot :  matric potential of a soil in pascals</span>
+<span class="sd">    hrs : time of storm event (in hrs)</span>
+<span class="sd">        </span>
+<span class="sd">    r_intens : rainfall intensity (mm/hr)</span>
+<span class="sd">        </span>
+<span class="sd">    ro_coef_GA : runoff as a fraction of rainfall in the storm, </span>
+<span class="sd">                as simulated using the green-ampt-model</span>
 <span class="sd">    lamb : TYPE, optional</span>
 <span class="sd">        DESCRIPTION. The default is .2.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    TYPE</span>
-<span class="sd">        DESCRIPTION.</span>
+<span class="sd">    An estimated equivalent Curve Number</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
     
@@ -434,27 +745,28 @@ lamb : TYPE, optional
 
         </details>
 
-            <div class="docstring"><h2 id="parameters">Parameters</h2>
+            <div class="docstring"><p>Run all steps for estimating the effective curve-number of a soil 
+based on Green-Ampt Simlations and parameters.</p>
 
-<p>delt_vmc : TYPE
-    DESCRIPTION.
-Ksat : TYPE
-    DESCRIPTION.
-matric_pot : TYPE
-    DESCRIPTION.
-hrs : TYPE
-    DESCRIPTION.
-r_intens : TYPE
-    DESCRIPTION.
-ro_coef_GA : TYPE
-    DESCRIPTION.
+<h2 id="parameters">Parameters</h2>
+
+<p>delt_vmc :
+    Change in volumetric moisture content across the wetting front (mm/mm)
+Ksat : saturated hydraulic conductivity (mm/hr)</p>
+
+<p>matric_pot :  matric potential of a soil in pascals
+hrs : time of storm event (in hrs)</p>
+
+<p>r_intens : rainfall intensity (mm/hr)</p>
+
+<p>ro_coef_GA : runoff as a fraction of rainfall in the storm, 
+            as simulated using the green-ampt-model
 lamb : TYPE, optional
     DESCRIPTION. The default is .2.</p>
 
 <h2 id="returns">Returns</h2>
 
-<p>TYPE
-    DESCRIPTION.</p>
+<p>An estimated equivalent Curve Number</p>
 </div>
 
 
